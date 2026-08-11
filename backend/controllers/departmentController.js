@@ -97,13 +97,10 @@ export const createDepartment = asyncHandler(async (req, res) => {
 
 export const getDepartments = asyncHandler(async (req, res) => {
 
-  
+
 
     let {
-
-        
-
-        status,
+         status,
 
         sortBy = "createdAt",
 
@@ -111,18 +108,7 @@ export const getDepartments = asyncHandler(async (req, res) => {
 
     } = req.query;
 
-   
-
-   
-   
-
     const query = {};
-
-   
-
-  
-
-
     if (status) {
 
         query.status = status;

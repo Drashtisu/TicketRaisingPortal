@@ -22,11 +22,6 @@ const ticketSchema = new mongoose.Schema(
             trim: true
         },
 
-        attachment: {
-            type: String,
-            default: ""
-        },
-
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -107,11 +102,6 @@ const ticketSchema = new mongoose.Schema(
         resolvedAt: {
             type: Date,
             default: null
-        },
-
-        reopenedCount: {
-            type: Number,
-            default: 0
         },
 
         closedAt: {

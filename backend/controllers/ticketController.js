@@ -267,7 +267,6 @@ export const updateTicket = asyncHandler(async (req, res) => {
 
   if (ticket.status === "Reopened") {
     ticket.closedAt = null;
-    ticket.reopenedCount += 1;
   }
 
   await ticket.save();

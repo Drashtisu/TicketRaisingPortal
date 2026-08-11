@@ -58,6 +58,7 @@ export const getAssignedTickets = asyncHandler(async (req, res) => {
     "Closed",
     "Rejected",
     "Reopened",
+    
   ];
 
 
@@ -89,6 +90,8 @@ export const getAssignedTickets = asyncHandler(async (req, res) => {
     "priority",
     "status",
     "ticketNumber",
+    
+    
   ];
 
   if (!allowedSort.includes(sortBy)) sortBy = "updatedAt";
@@ -127,7 +130,7 @@ export const startWorking = asyncHandler(async (req, res) => {
       "Only assigned or reopened tickets can be started.",
     );
   }
-
+  
   ticket.status = "In Progress";
 
   ticket.startedAt ??= new Date();
@@ -157,7 +160,8 @@ export const addWorkLog = asyncHandler(async (req, res) => {
  
     const ticket = await getAssignedTicket(req.params.id, req.user._id);
  
-    if (ticket.status !== "In Progress")
+
+if (ticket.status !== "In Progress")
     
       throw new ApiError(
       400,
@@ -186,6 +190,7 @@ export const resolveTicket = asyncHandler(async (req, res) => {
   
   if (ticket.status !== "In Progress")
   
+    
     
     throw new ApiError(400, "Only tickets in progress can be resolved.");
   
