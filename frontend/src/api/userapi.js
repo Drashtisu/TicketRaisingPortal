@@ -1,18 +1,5 @@
-import api  from './axios'
+import api from './axios';
 
-
-const  createUser =()=>{
-    api.post('')
-}
-const  createUser =()=>{
-    api.post('')
-}
-const  createUser =()=>{
-    api.post('')
-}
-const  createUser =()=>{
-    api.post('')
-}
-const  createUser =()=>{
-    api.post('')
-}
+export const getUsers = (params) => api.get('/users', { params });
+export const getUserById = (id) => api.get(`/users/${id}`);
+export const updateUser = (id, payload) => api.put(`/users/${id}`, payload);

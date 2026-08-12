@@ -1,26 +1,7 @@
-
-
-import './App.css'
-import Register from './features/auth/Register'
-import Login from './features/auth/Login';
-
-
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
-  
-
-  return (
-    <>
-      
-{/* <Register/> */}
-<Login/>  
-   
-
-     
-
-      
-    </>
-  )
+  return <AppRoutes />;
 }
 
-export default App
+export default App;

@@ -1,13 +1,27 @@
-import React from 'react'
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { fetchProfile, clearError } from './authSlice';
 
 const Profile = () => {
+  const  dispatch =useDispatch();
+  const  [loading ,user] =useSelector((state)=>state.auth);
+
+useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
+
   return (
-    <div>
-        <form action="">
-        <h1>User/admin/agent  name</h1>
-        <h2>user email id</h2>
-        <button>Logout</button>
-        </form>
+     <div className="page-card">
+      <h2>Profile</h2>
+      {loading ? <p>Loading profile</p> : user ? (
+        <div className="profile-card">
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Role:</strong> {user.role}</p>
+          <p><strong>Phone:</strong> {user.phone || '—'}</p>
+        </div>
+      ) : null}
     </div>
   )
 }

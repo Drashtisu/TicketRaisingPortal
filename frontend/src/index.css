@@ -1,38 +1,214 @@
-*{
-    margin: 0;
-    padding: 0;
+:root {
+
+    color: #f7f8fb;
+    background: #0f172a;
+
+}
+
+* {
     box-sizing: border-box;
 }
 
-body{
-    background: rgb(30, 30, 58);
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #f3f6fb;
+    color: #0f172a;
 }
-.common-form{
-    width: 500px;
-    height: 600px;
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: #0f172a;
+    color: white;
+    padding: 24px 18px;
+}
+
+.sidebar h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.sidebar nav {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 8px;
 }
-label{
-    font-size: 20px;
-   }
-   input{
-    height: 50px;
-    outline: none;
-    padding: 0px 10px;
-   }
-button{
-    padding: 10px 0px;
-    border: 0px;
-    background: rgb(30, 30, 58);
+
+.sidebar a {
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #cbd5e1;
+}
+
+.main-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.topbar-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.content-area {
+    padding: 24px;
+}
+
+.page-card,
+.auth-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.auth-shell {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-card h2,
+.page-card h2 {
+    margin-top: 0;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+input,
+select,
+textarea {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+button,
+.btn {
+    background: #2563eb;
     color: white;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover,
+.btn:hover {
+    background: #1d4ed8;
+}
+
+.danger-button {
+    background: #b91c1c;
+}
+
+.danger-button:hover {
+    background: #991b1b;
+}
+
+.alert {
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.alert.error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.ticket-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.ticket-top,
+.meta-row,
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.badge {
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+}
+
+.form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-form {
+    max-width: 520px;
+    margin: 0 0 24px;
+}
+
+.auth-link {
+    margin-top: 12px;
+    color: #475569;
+}
+
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
