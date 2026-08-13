@@ -15,6 +15,7 @@ const populateTicket = (query) =>
     .populate("department", "name code")
     .populate("category", "name code")
     .populate("assignedAgent", "name email")
+    .populate("assignedBy", "name email")
     .populate("workLogs.createdBy", "name email");
 
 const getAssignedTicket = async (id, agentId) => {

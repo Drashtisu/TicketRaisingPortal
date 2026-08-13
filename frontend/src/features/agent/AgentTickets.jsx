@@ -48,7 +48,8 @@ const AgentTickets = () => {
             <h3>{ticket.title}</h3>
             <p>{ticket.description}</p>
             <p>Status: {ticket.status}</p>
-            <p>Requester: {ticket.createdBy?.name || "Unknown"}</p>
+            <p>User Name: {ticket.createdBy?.name || "Unknown"}</p>
+            <p>Ticket Assigner: {ticket.assignedBy?.name || "Unknown"}</p>
             {ticket.status === "Assigned" || ticket.status === "Reopened" ? (
               <button
                 onClick={() => runAction(() => startTicketWork(ticket._id))}

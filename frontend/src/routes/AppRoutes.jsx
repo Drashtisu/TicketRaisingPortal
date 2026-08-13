@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import AdminRoute from '../components/common/AdminRoute';
 import AgentRoute from '../components/common/AgentRoute';
 import ProtectedRoute from '../components/common/ProtectedRoute';
@@ -18,11 +19,13 @@ import UserList from '../features/users/UserList';
 import UserLayout from '../layouts/UserLayout';
 
 const AppRoutes = () => {
+  const { token } = useSelector((state) => state.auth);
+
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/login" element={token ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/register" element={token ? <Navigate to="/dashboard" replace /> : <Register />} />
+      <Route path="/" element={<Navigate to={token ? "/dashboard" : "/register"} replace />} />
       <Route
         path="/*"
         element={

@@ -26,6 +26,7 @@ const populateTicket = (query) =>
     .populate("department", "name code")
     .populate("category", "name code")
     .populate("assignedAgent", "name email")
+    .populate("assignedBy", "name email")
     .populate("workLogs.createdBy", "name email");
 
 const validateRelations = async ({ department, category, assignedAgent }) => {
@@ -303,8 +304,13 @@ export const updateTicket = asyncHandler(async (req, res) => {
 
   if (assignedAgent !== undefined) {
     ticket.assignedAgent = assignedAgent || null;
-    if (assignedAgent && ticket.status === "Pending")
-      ticket.status = "Assigned";
+    if (assignedAgent) {
+      ticket.assignedBy = req.user._id;
+      if (ticket.status === "Pending")
+        ticket.status = "Assigned";
+    } else {
+      ticket.assignedBy = null;
+    }
   }
 
   if (status !== undefined) ticket.status = status;

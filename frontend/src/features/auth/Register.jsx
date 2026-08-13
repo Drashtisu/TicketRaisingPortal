@@ -14,7 +14,7 @@ const Register = () => {
     dispatch(clearError());
     const result = await dispatch(register(form));
     console.log(result)
-    if (register.fulfilled.match(result)) navigate('/dashboard');
+    if (register.fulfilled.match(result)) navigate('/login');
   };
 
   return (

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUsers, updateUser } from '../../api/userApi';
+import { getUsers, updateUser, deleteUser as deleteUserRequest } from '../../api/userApi';
 
 const initialState = { items: [], loading: false, error: '' };
 
@@ -18,6 +18,15 @@ export const changeUser = createAsyncThunk('users/change', async ({ id, payload 
     return response.data.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not update user');
+  }
+});
+
+export const removeUser = createAsyncThunk('users/remove', async (id, thunkAPI) => {
+  try {
+    await deleteUserRequest(id);
+    return id;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not delete user');
   }
 });
 
@@ -41,6 +50,9 @@ const userSlice = createSlice({
       })
       .addCase(changeUser.fulfilled, (state, action) => {
         state.items = state.items.map((user) => user._id === action.payload._id ? action.payload : user);
+      })
+      .addCase(removeUser.fulfilled, (state, action) => {
+        state.items = state.items.filter((user) => user._id !== action.payload);
       });
   }
 });

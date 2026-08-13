@@ -26,10 +26,7 @@ export const login = createAsyncThunk('auth/login', async (payload, thunkAPI) =>
 export const register = createAsyncThunk('auth/register', async (payload, thunkAPI) => {
   try {
     const response = await registerRequest(payload);
-    const { token, user } = response.data.data;
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    return { token, user };
+    return response.data.message || 'Registration successful';
   } catch (error) {
     if (!error.response) {
       return thunkAPI.rejectWithValue('Unable to reach the API. Start the backend server on port 5000 and try again.');
@@ -87,10 +84,8 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = '';
       })
-      .addCase(register.fulfilled, (state, action) => {
+      .addCase(register.fulfilled, (state) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;

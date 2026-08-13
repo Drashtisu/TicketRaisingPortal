@@ -51,6 +51,12 @@ const ticketSchema = new mongoose.Schema(
             default: null
         },
 
+        assignedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null
+        },
+
         priority: {
             type: String,
             enum: [

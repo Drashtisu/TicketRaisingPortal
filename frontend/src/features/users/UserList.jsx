@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeUser, fetchUsers } from './userSlice';
+import { changeUser, fetchUsers, removeUser } from './userSlice';
 
 const UserList = () => {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((state) => state.users);
+  const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -29,6 +30,29 @@ const UserList = () => {
                   <option value="true">Active</option><option value="false">Inactive</option>
                 </select>
               </label>
+              {currentUser && currentUser._id !== user._id && (
+                <button
+                  type="button"
+                  style={{
+                    marginTop: '12px',
+                    backgroundColor: '#e63946',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '0.85rem'
+                  }}
+                  onClick={() => {
+                    if (window.confirm(`Are you sure you want to delete user ${user.name}?`)) {
+                      dispatch(removeUser(user._id));
+                    }
+                  }}
+                >
+                  Delete User
+                </button>
+              )}
             </div>
           ))}
         </div>

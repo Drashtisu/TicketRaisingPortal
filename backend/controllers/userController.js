@@ -1,6 +1,6 @@
 import User from "../models/User.js";
-import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const getUsers = asyncHandler(async (req, res) => {
@@ -37,4 +37,18 @@ export const updateUser = asyncHandler(async (req, res) => {
 
   const userData = await User.findById(user._id).select("-password");
   return res.status(200).json(new ApiResponse(200, "User updated successfully", userData));
+});
+
+export const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findById(id);
+  if (!user) throw new ApiError(404, "User not found.");
+
+  if (user._id.equals(req.user._id)) {
+    throw new ApiError(400, "You cannot delete your own account.");
+  }
+
+  await user.deleteOne();
+  return res.status(200).json(new ApiResponse(200, "User deleted successfully"));
 });
