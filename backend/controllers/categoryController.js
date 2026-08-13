@@ -157,9 +157,11 @@ export const getCategories = asyncHandler(async (req, res) => {
 
     let {
 
-       
+        page = 1,
 
-      
+        limit = 10,
+
+        search = "",
 
         department,
 
@@ -172,18 +174,56 @@ export const getCategories = asyncHandler(async (req, res) => {
     } = req.query;
 
   
-   
+    page = Number(page);
+
+    limit = Number(limit);
 
    
 
-    
+    if (page < 1) page = 1;
+
+    if (limit < 1) limit = 10;
+
+    if (limit > 100) limit = 100;
+
+   
+    const skip = (page - 1) * limit;
+
    
 
     const query = {};
 
   
 
-  
+    if (search) {
+
+        query.$or = [
+
+            {
+                name: {
+                    $regex: search,
+                    $options: "i"
+                }
+            },
+
+            {
+                code: {
+                    $regex: search,
+                    $options: "i"
+                }
+            },
+
+            {
+                description: {
+                    $regex: search,
+                    $options: "i"
+                }
+            }
+
+        ];
+
+    }
+
    
 
     if (department) {
@@ -249,7 +289,11 @@ export const getCategories = asyncHandler(async (req, res) => {
 
     
 
-    
+    const sort = {
+
+        [sortBy]: order === "asc" ? 1 : -1
+
+    };
 
    
 
@@ -278,7 +322,7 @@ const categories = await Category.find(query)
 
 
 
-
+const totalPages = Math.ceil(totalCategories / limit);
 
 
 
@@ -294,7 +338,21 @@ return res.status(200).json(
 
             categories,
 
-          
+            pagination: {
+
+                totalCategories,
+
+                totalPages,
+
+                currentPage: page,
+
+                limit,
+
+                hasNextPage: page < totalPages,
+
+                hasPreviousPage: page > 1
+
+            }
 
         }
 

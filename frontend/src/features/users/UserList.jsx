@@ -1,18 +1,17 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeUser, fetchUsers } from './userSlice';
 
 const UserList = () => {
+  const dispatch = useDispatch();
+  const { items, loading } = useSelector((state) => state.users);
 
-const  dispatch =useDispatch();
-const {items ,loading} =useSelector((state) =>state.users)
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
-
-useEffect (()=>{
-  dispatch(fetchUsers())
-},[dispatch])
   return (
-   <div className="page-card">
+    <div className="page-card">
       <h2>Users</h2>
       {loading ? <p>Loading users...</p> : (
         <div className="card-grid">
@@ -35,7 +34,7 @@ useEffect (()=>{
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default UserList
+export default UserList;

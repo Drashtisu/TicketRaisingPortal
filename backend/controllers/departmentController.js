@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
 import Department from "../models/Department.js";
-import ApiError from "../utils/ApiError.js";
+import mongoose from "mongoose";
 import ApiResponse from "../utils/ApiResponse.js";
+import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import Ticket from "../models/Ticket.js";
 
 
 
@@ -97,10 +98,17 @@ export const createDepartment = asyncHandler(async (req, res) => {
 
 export const getDepartments = asyncHandler(async (req, res) => {
 
-
+  
 
     let {
-         status,
+
+        page = 1,
+
+        limit = 10,
+
+        search = "",
+
+        status,
 
         sortBy = "createdAt",
 
@@ -108,7 +116,59 @@ export const getDepartments = asyncHandler(async (req, res) => {
 
     } = req.query;
 
+   
+
+    page = Number(page);
+
+    limit = Number(limit);
+
+   
+
+    if (page < 1) page = 1;
+
+    if (limit < 1) limit = 10;
+
+    if (limit > 100) limit = 100;
+
+ 
+    const skip = (page - 1) * limit;
+
+   
+
     const query = {};
+
+   
+
+    if (search) {
+
+        query.$or = [
+
+            {
+                name: {
+                    $regex: search,
+                    $options: "i"
+                }
+            },
+
+            {
+                code: {
+                    $regex: search,
+                    $options: "i"
+                }
+            },
+
+            {
+                description: {
+                    $regex: search,
+                    $options: "i"
+                }
+            }
+
+        ];
+
+    }
+
+
     if (status) {
 
         query.status = status;
@@ -138,6 +198,11 @@ export const getDepartments = asyncHandler(async (req, res) => {
     }
 
 
+    const sort = {
+
+        [sortBy]: order === "asc" ? 1 : -1
+
+    };
 
    
 
@@ -161,7 +226,7 @@ const departments = await Department.find(query)
 
 
 
-
+const totalPages = Math.ceil(totalDepartments / limit);
 
 
 

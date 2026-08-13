@@ -1,19 +1,20 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
 import compression from "compression";
-import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import express from "express";
+import helmet from "helmet";
+import morgan from "morgan";
 
 import authRoutes from "./routes/authRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
-import notFound from "./middleware/notFound.js";
-import errorHandler from "./middleware/errorHandler.js";
-import ticketRoutes from "./routes/ticketRoutes.js";
-import departmentRoutes from "./routes/departmentRoutes.js";
-import categoryRoutes from "./routes/categoryRoutes.js";
-import agentRoutes from "./routes/agentRoutes.js";
 
+import errorHandler from "./middleware/errorHandler.js";
+import notFound from "./middleware/notFound.js";
+import agentRoutes from "./routes/agentRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import departmentRoutes from "./routes/departmentRoutes.js";
+import ticketRoutes from "./routes/ticketRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 const app = express();
 
 
@@ -48,6 +49,8 @@ app.use("/api/departments", departmentRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/agent", agentRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/users", userRoutes);
+
 
 app.use(notFound);
 

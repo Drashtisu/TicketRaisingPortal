@@ -1,5 +1,5 @@
-import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   const { user } = useSelector((state) => state.auth);
@@ -8,9 +8,23 @@ const Sidebar = () => {
     <aside className="sidebar">
       <h3>Ticket Portal</h3>
       <nav>
+        {/* Dashboard - All authenticated users */}
         <NavLink to="/dashboard">Dashboard</NavLink>
-        {user?.role !== 'agent' && <><NavLink to="/tickets">My Tickets</NavLink><NavLink to="/tickets/new">Create Ticket</NavLink></>}
-        {user?.role === 'agent' && <NavLink to="/assigned-tickets">Assigned Tickets</NavLink>}
+
+        {/* User & Admin Menu - Ticket Management */}
+        {(user?.role === 'user' || user?.role === 'admin') && (
+          <>
+            <NavLink to="/tickets">My Tickets</NavLink>
+            <NavLink to="/tickets/new">Create Ticket</NavLink>
+          </>
+        )}
+
+        {/* Agent Menu */}
+        {user?.role === 'agent' && (
+          <NavLink to="/assigned-tickets">Assigned Tickets</NavLink>
+        )}
+
+        {/* Admin Menu - Management Features */}
         {user?.role === 'admin' && (
           <>
             <NavLink to="/admin/tickets">Manage Tickets</NavLink>
@@ -19,6 +33,8 @@ const Sidebar = () => {
             <NavLink to="/users">Users</NavLink>
           </>
         )}
+
+        {/* Profile - All authenticated users */}
         <NavLink to="/profile">Profile</NavLink>
       </nav>
     </aside>

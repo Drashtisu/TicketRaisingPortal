@@ -7,11 +7,15 @@ import generateToken from "../utils/genrateToken.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
 
-    const { name, email, password, phone } = req.body;
+    const { name, email, password, phone, role = "user" } = req.body;
 
    
     if (!name || !email || !password) {
         throw new ApiError(400, "Name, Email and Password are required");
+    }
+
+    if (!["user", "agent", "admin"].includes(role)) {
+        throw new ApiError(400, "Invalid user role");
     }
 
     const existingUser = await User.findOne({ email });
@@ -25,7 +29,8 @@ export const registerUser = asyncHandler(async (req, res) => {
         name,
         email,
         password,
-        phone
+        phone,
+        role
     });
 
    
@@ -113,7 +118,7 @@ export const getProfile = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new ApiResponse(
             200,
-            "Profile show successfully",
+            "Profile fetched successfully",
             user
         )
     );

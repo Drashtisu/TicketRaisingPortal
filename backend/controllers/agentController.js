@@ -1,3 +1,4 @@
+
 import mongoose from "mongoose";
 import Ticket from "../models/Ticket.js";
 import ApiResponse from "../utils/ApiResponse.js";
@@ -15,9 +16,6 @@ const populateTicket = (query) =>
     .populate("category", "name code")
     .populate("assignedAgent", "name email")
     .populate("workLogs.createdBy", "name email");
-
-
-
 
 const getAssignedTicket = async (id, agentId) => {
 
@@ -37,17 +35,18 @@ const getAssignedTicket = async (id, agentId) => {
 export const getAssignedTickets = asyncHandler(async (req, res) => {
 
   let {
- 
+    page = 1,
+    limit = 10,
     status,
     priority,
-    
+    search = "",
     sortBy = "updatedAt",
     order = "desc",
   } = req.query;
 
-  
+  page = Math.max(Number(page) || 1, 1);
 
- 
+  limit = Math.min(Math.max(Number(limit) || 10, 1), 100);
 
   const query = { assignedAgent: req.user._id };
 
@@ -58,7 +57,6 @@ export const getAssignedTickets = asyncHandler(async (req, res) => {
     "Closed",
     "Rejected",
     "Reopened",
-    
   ];
 
 
@@ -83,17 +81,21 @@ export const getAssignedTickets = asyncHandler(async (req, res) => {
 
   }
 
-  
+  if (search)
+
+    query.$or = ["title", "description", "ticketNumber"].map((field) => ({
+
+      [field]: { $regex: search, $options: "i" },
+
+    }));
+
   const allowedSort = [
     "createdAt",
     "updatedAt",
     "priority",
     "status",
     "ticketNumber",
-    
-    
   ];
-
   if (!allowedSort.includes(sortBy)) sortBy = "updatedAt";
 
   const [totalTickets, tickets] = await Promise.all([
@@ -106,6 +108,7 @@ export const getAssignedTickets = asyncHandler(async (req, res) => {
       .limit(limit),
   ]);
 
+  const totalPages = Math.ceil(totalTickets / limit);
 
   return res
 
@@ -114,7 +117,14 @@ export const getAssignedTickets = asyncHandler(async (req, res) => {
       new ApiResponse(200, "Assigned tickets fetched successfully.", {
 
         tickets,
-        
+        pagination: {
+          totalTickets,
+          totalPages,
+          currentPage: page,
+          limit,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1,
+        },
       }),
     );
 });
@@ -130,7 +140,7 @@ export const startWorking = asyncHandler(async (req, res) => {
       "Only assigned or reopened tickets can be started.",
     );
   }
-  
+
   ticket.status = "In Progress";
 
   ticket.startedAt ??= new Date();
@@ -160,8 +170,7 @@ export const addWorkLog = asyncHandler(async (req, res) => {
  
     const ticket = await getAssignedTicket(req.params.id, req.user._id);
  
-
-if (ticket.status !== "In Progress")
+    if (ticket.status !== "In Progress")
     
       throw new ApiError(
       400,
@@ -190,7 +199,6 @@ export const resolveTicket = asyncHandler(async (req, res) => {
   
   if (ticket.status !== "In Progress")
   
-    
     
     throw new ApiError(400, "Only tickets in progress can be resolved.");
   

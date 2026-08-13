@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { register, clearError } from './authSlice';
+import { clearError, register } from './authSlice';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -13,6 +13,7 @@ const Register = () => {
     e.preventDefault();
     dispatch(clearError());
     const result = await dispatch(register(form));
+    console.log(result)
     if (register.fulfilled.match(result)) navigate('/dashboard');
   };
 
@@ -20,9 +21,9 @@ const Register = () => {
     <div className="auth-shell">
       <form className="auth-card" onSubmit={handleSubmit}>
         <h2>Create account</h2>
-        <p>Join the ticket portal</p>
+       
         {error && <div className="alert error">{error}</div>}
-        <label>
+          <label>
           Name
           <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         </label>

@@ -51,7 +51,7 @@ const categorySchema = new mongoose.Schema(
 
 
 
-
+// Fast searching
 categorySchema.index({ name: 1 });
 
 categorySchema.index({ department: 1 });

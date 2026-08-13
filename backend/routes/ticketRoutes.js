@@ -3,6 +3,7 @@ import express from "express";
 import {
     createTicket,
     getMyTickets,
+    getAllTickets,
     getTicketById,
     updateTicket,
     deleteTicket
@@ -30,6 +31,8 @@ router.get(
     authorize("user", "admin"),
     getMyTickets
 );
+
+router.get("/", protect, authorize("admin"), getAllTickets);
 
 
 router.get(

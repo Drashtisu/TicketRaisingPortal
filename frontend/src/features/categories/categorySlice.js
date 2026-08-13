@@ -13,7 +13,7 @@ try{
 }
 catch(error){
     return thunkAPI.rejectWithValue(error.response?.data?.message || "falied  to fetch  categories")
-}
+  }
 });
 
 
@@ -24,7 +24,7 @@ export  const addCategory = createAsyncThunk('/categories/add', async(paylaod,th
     }
     catch(error){
         return  thunkAPI.rejectWithValue(error.response?.data?.message || "failed  to create  category")
-    }
+  }
 });
 
 
@@ -35,7 +35,7 @@ export const  editCategory =createAsyncThunk ('/categories/edit',async ({id,payl
     }
     catch(error){
    return  thunkAPI.rejectWithValue(error.response?.data?.message || "failed  to edit  category")
-    }
+  }
 })
 
 export const  removeCategory =createAsyncThunk('/categories/remove' ,async ({id,paylaod} ,thunkAPI)=>{
@@ -46,16 +46,14 @@ export const  removeCategory =createAsyncThunk('/categories/remove' ,async ({id,
     }
     catch(error){
         return  thunkAPI.rejectWithValue(error.response?.data?.message || "failed  to remove  category")
-    }
+  }
 })
 
 
 const categorySlice = createSlice({
   name: 'categories',
   initialState,
-  reducers: {
-    
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.pending, (state) => {
@@ -80,6 +78,6 @@ const categorySlice = createSlice({
         state.items = state.items.filter((item) => item._id !== action.payload);
       });
   }
-})
+});
 
-export default categorySlice.reducer
+export default categorySlice.reducer;

@@ -12,6 +12,7 @@ const TicketList = () => {
 
   const handleDelete = (id) => {
     dispatch(removeTicket(id));
+    console.log(dispatch())
   };
 
   return (
@@ -26,6 +27,7 @@ const TicketList = () => {
           {tickets.map((ticket) => (
             <div key={ticket._id} className="ticket-card">
               <div className="ticket-top">
+                
                 <strong>{ticket.ticketNumber}</strong>
                 <span className="badge">{ticket.status}</span>
               </div>

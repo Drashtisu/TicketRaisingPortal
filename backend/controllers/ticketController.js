@@ -29,7 +29,35 @@ const populateTicket = (query) =>
     .populate("workLogs.createdBy", "name email");
 
 const validateRelations = async ({ department, category, assignedAgent }) => {
+  if (department !== undefined && department !== null) {
+    if (
+      !isValidId(department) ||
+      !(await Department.exists({ _id: department, status: "Active" }))
+    ) {
+      throw new ApiError(400, "Department must be a valid active department.");
+    }
+  }
 
+  if (category !== undefined && category !== null) {
+    if (!isValidId(category)) throw new ApiError(400, "Invalid Category ID.");
+
+    const categoryDoc = await Category.findOne({
+      _id: category,
+      status: "Active",
+    });
+
+    if (!categoryDoc) throw new ApiError(400, "Category must be active.");
+
+    if (
+      department &&
+      categoryDoc.department.toString() !== department.toString()
+    ) {
+      throw new ApiError(
+        400,
+        "Category does not belong to the selected department.",
+      );
+    }
+  }
 
   if (assignedAgent !== undefined && assignedAgent !== null) {
     if (
@@ -83,10 +111,11 @@ export const createTicket = asyncHandler(async (req, res) => {
     );
 });
 
-
 export const getMyTickets = asyncHandler(async (req, res) => {
   let {
-   
+    page = 1,
+    limit = 10,
+    search = "",
     status,
     priority,
     department,
@@ -97,7 +126,9 @@ export const getMyTickets = asyncHandler(async (req, res) => {
     order = "desc",
   } = req.query;
 
+  page = Math.max(Number(page) || 1, 1);
 
+  limit = Math.min(Math.max(Number(limit) || 10, 1), 100);
 
   const query = { createdBy: req.user._id };
 
@@ -131,7 +162,11 @@ export const getMyTickets = asyncHandler(async (req, res) => {
     if (endDate) query.createdAt.$lte = new Date(endDate);
   }
 
- 
+  if (search)
+    query.$or = ["title", "description", "ticketNumber"].map((field) => ({
+      [field]: { $regex: search, $options: "i" },
+    }));
+
   const allowedSort = [
     "createdAt",
     "updatedAt",
@@ -151,16 +186,30 @@ export const getMyTickets = asyncHandler(async (req, res) => {
       .limit(limit),
   ]);
 
-
+  const totalPages = Math.ceil(totalTickets / limit);
 
   return res
     .status(200)
     .json(
       new ApiResponse(200, "Tickets fetched successfully.", {
         tickets,
-        
+        pagination: {
+          totalTickets,
+          totalPages,
+          currentPage: page,
+          limit,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1,
+        },
       }),
     );
+});
+
+export const getAllTickets = asyncHandler(async (req, res) => {
+  const tickets = await populateTicket(Ticket.find({}).sort({ updatedAt: -1 }));
+  return res.status(200).json(
+    new ApiResponse(200, "Tickets fetched successfully.", { tickets }),
+  );
 });
 
 export const getTicketById = asyncHandler(async (req, res) => {
@@ -196,7 +245,7 @@ export const updateTicket = asyncHandler(async (req, res) => {
   const isOwner = ticket.createdBy.equals(req.user._id);
 
   if (req.user.role !== "admin" && !isOwner)
-    throw new ApiError(403, "You are not allow to update this ticket.");
+    throw new ApiError(403, "You are not authorized to update this ticket.");
 
   if (ticket.status === "Closed")
     throw new ApiError(400, "Closed tickets cannot be updated.");
@@ -220,7 +269,7 @@ export const updateTicket = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(
       403,
-      "Only an admin can change ticket assignment",
+      "Only an administrator can change ticket assignment, status, or classification.",
     );
   }
 
@@ -267,6 +316,7 @@ export const updateTicket = asyncHandler(async (req, res) => {
 
   if (ticket.status === "Reopened") {
     ticket.closedAt = null;
+    ticket.reopenedCount += 1;
   }
 
   await ticket.save();
@@ -290,7 +340,7 @@ export const deleteTicket = asyncHandler(async (req, res) => {
   if (!ticket) throw new ApiError(404, "Ticket not found.");
 
   if (req.user.role !== "admin" && !ticket.createdBy.equals(req.user._id))
-    throw new ApiError(403, "You are not allow to delete this ticket.");
+    throw new ApiError(403, "You are not authorized to delete this ticket.");
 
   if (ticket.status === "Closed")
     throw new ApiError(400, "Closed tickets cannot be deleted.");

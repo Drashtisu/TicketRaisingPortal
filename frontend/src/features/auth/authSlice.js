@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUser as loginRequest, registerUser as registerRequest, getProfile, logoutUser as logoutRequest } from '../../api/authApi';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getProfile, loginUser as loginRequest, logoutUser as logoutRequest, registerUser as registerRequest } from '../../api/authApi';
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user') || 'null'),
@@ -12,13 +12,13 @@ export const login = createAsyncThunk('auth/login', async (payload, thunkAPI) =>
   try {
     const response = await loginRequest(payload);
     const { token, user } = response.data.data;
-    if (payload.role && user.role !== payload.role) {
-      return thunkAPI.rejectWithValue(`This account is registered as ${user.role}.`);
-    }
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
     return { token, user };
   } catch (error) {
+    if (!error.response) {
+      return thunkAPI.rejectWithValue('Unable to reach the API. Start the backend server on port 5000 and try again.');
+    }
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Login failed');
   }
 });
@@ -31,6 +31,9 @@ export const register = createAsyncThunk('auth/register', async (payload, thunkA
     localStorage.setItem('user', JSON.stringify(user));
     return { token, user };
   } catch (error) {
+    if (!error.response) {
+      return thunkAPI.rejectWithValue('Unable to reach the API. Start the backend server on port 5000 and try again.');
+    }
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Registration failed');
   }
 });
@@ -44,14 +47,17 @@ export const fetchProfile = createAsyncThunk('auth/profile', async (_, thunkAPI)
   }
 });
 
-export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+export const logout = createAsyncThunk('auth/logout', async () => {
   try {
     await logoutRequest();
+  } catch {
+    // Local logout should still succeed when the server session has expired.
   } finally {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    return true;
   }
+
+  return true;
 });
 
 const authSlice = createSlice({

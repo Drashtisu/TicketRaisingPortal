@@ -5,11 +5,11 @@ import { authorize } from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 
-router.use(protect, authorize("admin"));
-router.route("/").post(createCategory)
-router.route("/").get(getCategories);
-router.route("/:id").get(getCategoryById)
-router.route("/:id").put(updateCategory)
-router.route("/:id").delete(deleteCategory);
+router.use(protect);
+router.route("/").get(getCategories).post(authorize("admin"), createCategory);
+router.route("/:id")
+  .get(getCategoryById)
+  .put(authorize("admin"), updateCategory)
+  .delete(authorize("admin"), deleteCategory);
 
 export default router;
