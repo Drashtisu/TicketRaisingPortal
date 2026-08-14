@@ -14,9 +14,10 @@ import DepartmentList from '../features/departments/DepartmentList';
 import AdminTickets from '../features/tickets/AdminTickets';
 import CreateTicket from '../features/tickets/CreateTicket';
 import TicketDetails from '../features/tickets/TicketDetails';
-import TicketList from '../features/tickets/TicketList';
+
 import UserList from '../features/users/UserList';
 import UserLayout from '../layouts/UserLayout';
+import TicketList from './../features/tickets/TicketList';
 
 const AppRoutes = () => {
   const { token } = useSelector((state) => state.auth);
@@ -36,7 +37,7 @@ const AppRoutes = () => {
                 <Route path="dashboard" element={<Dashboard />} />
                 
                
-                <Route path="tickets" element={<UserAdminRoute><TicketList /></UserAdminRoute>} />
+                <Route path="tickets" element={<UserAdminRoute><TicketList/></UserAdminRoute>} />
                 <Route path="tickets/new" element={<UserAdminRoute><CreateTicket /></UserAdminRoute>} />
                 <Route path="tickets/:id" element={<TicketDetails />} />
                 
