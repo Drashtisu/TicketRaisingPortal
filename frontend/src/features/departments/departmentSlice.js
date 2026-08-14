@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createDepartment, deleteDepartment, getDepartments, updateDepartment } from './../../api/departmentApi';
+import { createDepartment, deleteDepartment, getDepartments, updateDepartment } from '../../api/departmentApi';
 
 
 const initialState = { items: [], loading: false, error: '' };

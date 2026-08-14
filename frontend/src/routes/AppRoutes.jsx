@@ -1,18 +1,22 @@
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import ProtectedRoute from './../components/common/ProtectedRoute';
-import UserLayout from './../layouts/UserLayout';
-import Dashboard from './../features/dashboard/Dashboard';
-import UserAdminRoute from './../components/common/UserAdminRoute';
-import TicketList from './../features/tickets/TicketList';
-import CreateTicket from './../features/tickets/CreateTicket';
-import AgentTickets from './../features/agent/AgentTickets';
-import AdminRoute from './../components/common/AdminRoute';
-import AdminTickets from './../features/tickets/AdminTickets';
-import DepartmentList from './../features/departments/DepartmentList';
-import CategoryList from './../features/categories/CategoryList';
-import UserList from './../features/users/UserList';
-import Profile from './../features/auth/Profile';
+import ProtectedRoute from '../components/common/ProtectedRoute';
+import UserAdminRoute from '../components/common/UserAdminRoute';
+import AdminRoute from '../components/common/AdminRoute';
+import AgentRoute from '../components/common/AgentRoute';
+import UserLayout from '../layouts/UserLayout';
+import Login from '../features/auth/Login';
+import Register from '../features/auth/Register';
+import Profile from '../features/auth/Profile';
+import Dashboard from '../features/dashboard/Dashboard';
+import TicketList from '../features/tickets/TicketList';
+import CreateTicket from '../features/tickets/CreateTicket';
+import TicketDetails from '../features/tickets/TicketDetails';
+import AdminTickets from '../features/tickets/AdminTickets';
+import AgentTickets from '../features/agent/AgentTickets';
+import DepartmentList from '../features/departments/DepartmentList';
+import CategoryList from '../features/categories/CategoryList';
+import UserList from '../features/users/UserList';
 
 
 const AppRoutes = () => {

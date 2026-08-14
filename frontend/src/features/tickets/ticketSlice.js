@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createTicket, deleteTicket, getAllTickets, getMyTickets, updateTicket } from './../../api/ticketApi';
+import { createTicket, deleteTicket, getAllTickets, getMyTickets, updateTicket } from '../../api/ticketApi';
 
 
 const initialState = {
