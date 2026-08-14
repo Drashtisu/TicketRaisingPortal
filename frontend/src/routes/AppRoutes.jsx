@@ -35,21 +35,21 @@ const AppRoutes = () => {
                 
                 <Route path="dashboard" element={<Dashboard />} />
                 
-                {/* User & Admin Routes - Ticket Management */}
+               
                 <Route path="tickets" element={<UserAdminRoute><TicketList /></UserAdminRoute>} />
                 <Route path="tickets/new" element={<UserAdminRoute><CreateTicket /></UserAdminRoute>} />
                 <Route path="tickets/:id" element={<TicketDetails />} />
                 
-                {/* Agent Routes */}
+               
                 <Route path="assigned-tickets" element={<AgentRoute><AgentTickets /></AgentRoute>} />
                 
-                {/* Admin Routes */}
+               
                 <Route path="admin/tickets" element={<AdminRoute><AdminTickets /></AdminRoute>} />
                 <Route path="departments" element={<AdminRoute><DepartmentList /></AdminRoute>} />
                 <Route path="categories" element={<AdminRoute><CategoryList /></AdminRoute>} />
                 <Route path="users" element={<AdminRoute><UserList /></AdminRoute>} />
                 
-                {/* Profile - All authenticated users */}
+                
                 <Route path="profile" element={<Profile />} />
               </Routes>
             </UserLayout>
