@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { getDashboardStats } from '../../api/dashboardApi';
+import { getDashboardStats } from '../../api/dashboardapi';
 
 
 
