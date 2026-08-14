@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getDashboardStats } from '../../api/dashboardApi';
+import { getDashboardStats } from '../../api/dashboardApi.js';
 
 const initialState = { stats: {}, loading: false, error: '' };
 
