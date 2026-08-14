@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getProfile, loginUser, logoutUser, registerUser } from '../../api/AuthApi';
+import { getProfile, loginUser, logoutUser, registerUser } from '../../api/authApi';
 
 
 const initialState = {
