@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUsers, updateUser, deleteUser as deleteUserRequest } from '../../api/userApi.js';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getUsers, updateUser,deleteUser as deleteUserRequest } from './../../api/userApi';
 
 const initialState = { items: [], loading: false, error: '' };
 
