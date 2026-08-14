@@ -4,7 +4,7 @@ import {
   getAssignedTickets,
   resolveAgentTicket,
   startTicketWork,
-} from "../../api/agentApi";
+} from "./../../api/agentApi";
 
 const AgentTickets = () => {
   const [tickets, setTickets] = useState([]);

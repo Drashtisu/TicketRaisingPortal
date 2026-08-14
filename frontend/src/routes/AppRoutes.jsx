@@ -9,7 +9,7 @@ import Login from '../features/auth/Login';
 import Register from '../features/auth/Register';
 import Profile from '../features/auth/Profile';
 import Dashboard from '../features/dashboard/Dashboard';
-import TicketList from '../features/tickets/TicketList';
+
 import CreateTicket from '../features/tickets/CreateTicket';
 import TicketDetails from '../features/tickets/TicketDetails';
 import AdminTickets from '../features/tickets/AdminTickets';
@@ -17,6 +17,7 @@ import AgentTickets from '../features/agent/AgentTickets';
 import DepartmentList from '../features/departments/DepartmentList';
 import CategoryList from '../features/categories/CategoryList';
 import UserList from '../features/users/UserList';
+import TicketTabList from '../features/tickets/TicketTabList';
 
 
 const AppRoutes = () => {
@@ -37,7 +38,7 @@ const AppRoutes = () => {
                 <Route path="dashboard" element={<Dashboard />} />
                 
                
-                <Route path="tickets" element={<UserAdminRoute><TicketList /></UserAdminRoute>} />
+                <Route path="tickets" element={<UserAdminRoute><TicketTabList /></UserAdminRoute>} />
                 <Route path="tickets/new" element={<UserAdminRoute><CreateTicket /></UserAdminRoute>} />
                 <Route path="tickets/:id" element={<TicketDetails />} />
                 

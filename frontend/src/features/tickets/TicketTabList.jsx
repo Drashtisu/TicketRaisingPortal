@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTickets, removeTicket } from './ticketSlice';
 
-const TicketList = () => {
+const TicketTabList = () => {
   const dispatch = useDispatch();
   const { tickets, loading, error } = useSelector((state) => state.tickets);
 
@@ -49,4 +49,4 @@ const TicketList = () => {
   );
 };
 
-export default TicketList;
+export default TicketTabList;
