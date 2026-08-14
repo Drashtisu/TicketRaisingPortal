@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getDashboardStats } from './../../api/dashboardApi';
 
+
 const initialState = { stats: {}, loading: false, error: '' };
 
 export const fetchDashboard = createAsyncThunk('dashboard/fetch', async (_, thunkAPI) => {

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getProfile, loginUser as loginRequest, logoutUser as logoutRequest, registerUser as registerRequest } from './../../api/authApi';
+import { getProfile, loginUser, logoutUser, registerUser } from './../../api/authApi';
+
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user') || 'null'),
@@ -10,7 +11,7 @@ const initialState = {
 
 export const login = createAsyncThunk('auth/login', async (payload, thunkAPI) => {
   try {
-    const response = await loginRequest(payload);
+    const response = await loginUser(payload);
     const { token, user } = response.data.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
@@ -25,7 +26,7 @@ export const login = createAsyncThunk('auth/login', async (payload, thunkAPI) =>
 
 export const register = createAsyncThunk('auth/register', async (payload, thunkAPI) => {
   try {
-    const response = await registerRequest(payload);
+    const response = await registerUser(payload);
     return response.data.message || 'Registration successful';
   } catch (error) {
     if (!error.response) {
@@ -46,7 +47,7 @@ export const fetchProfile = createAsyncThunk('auth/profile', async (_, thunkAPI)
 
 export const logout = createAsyncThunk('auth/logout', async () => {
   try {
-    await logoutRequest();
+    await logoutUser();
   } catch {
     // Local logout should still succeed when the server session has expired.
   } finally {

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getUsers, updateUser,deleteUser as deleteUserRequest } from './../../api/userApi';
+import { deleteUser, getUsers, updateUser } from './../../api/userApi';
+
 
 const initialState = { items: [], loading: false, error: '' };
 
@@ -23,7 +24,7 @@ export const changeUser = createAsyncThunk('users/change', async ({ id, payload 
 
 export const removeUser = createAsyncThunk('users/remove', async (id, thunkAPI) => {
   try {
-    await deleteUserRequest(id);
+    await deleteUser(id);
     return id;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not delete user');

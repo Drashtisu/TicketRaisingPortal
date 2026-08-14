@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createTicket as createTicketRequest, getAllTickets, getMyTickets, updateTicket as updateTicketRequest, deleteTicket as deleteTicketRequest } from './../../api/ticketApi';
+import { createTicket, deleteTicket, getAllTickets, getMyTickets, updateTicket } from './../../api/ticketApi';
+
 
 const initialState = {
   tickets: [],
@@ -28,7 +29,7 @@ export const fetchAllTickets = createAsyncThunk('tickets/fetchAll', async (_, th
 
 export const addTicket = createAsyncThunk('tickets/add', async (payload, thunkAPI) => {
   try {
-    const response = await createTicketRequest(payload);
+    const response = await createTicket(payload);
     return response.data.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not create ticket');
@@ -37,7 +38,7 @@ export const addTicket = createAsyncThunk('tickets/add', async (payload, thunkAP
 
 export const editTicket = createAsyncThunk('tickets/edit', async ({ id, payload }, thunkAPI) => {
   try {
-    const response = await updateTicketRequest(id, payload);
+    const response = await updateTicket(id, payload);
     return response.data.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not update ticket');
@@ -46,7 +47,7 @@ export const editTicket = createAsyncThunk('tickets/edit', async ({ id, payload 
 
 export const removeTicket = createAsyncThunk('tickets/remove', async (id, thunkAPI) => {
   try {
-    await deleteTicketRequest(id);
+    await deleteTicket(id);
     return id;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not delete ticket');
