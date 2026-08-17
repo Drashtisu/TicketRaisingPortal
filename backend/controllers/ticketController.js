@@ -89,17 +89,11 @@ export const createTicket = asyncHandler(async (req, res) => {
 
   const ticket = await Ticket.create({
     ticketNumber: await generateTicketNumber(),
-
     title: title.trim(),
-
     description: description.trim(),
-
     department: department || null,
-
     category: category || null,
-
     priority: priority || null,
-
     createdBy: req.user._id,
   });
 
@@ -189,28 +183,26 @@ export const getMyTickets = asyncHandler(async (req, res) => {
 
   const totalPages = Math.ceil(totalTickets / limit);
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, "Tickets fetched successfully.", {
-        tickets,
-        pagination: {
-          totalTickets,
-          totalPages,
-          currentPage: page,
-          limit,
-          hasNextPage: page < totalPages,
-          hasPreviousPage: page > 1,
-        },
-      }),
-    );
+  return res.status(200).json(
+    new ApiResponse(200, "Tickets fetched successfully.", {
+      tickets,
+      pagination: {
+        totalTickets,
+        totalPages,
+        currentPage: page,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    }),
+  );
 });
 
 export const getAllTickets = asyncHandler(async (req, res) => {
   const tickets = await populateTicket(Ticket.find({}).sort({ updatedAt: -1 }));
-  return res.status(200).json(
-    new ApiResponse(200, "Tickets fetched successfully.", { tickets }),
-  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Tickets fetched successfully.", { tickets }));
 });
 
 export const getTicketById = asyncHandler(async (req, res) => {
@@ -306,8 +298,7 @@ export const updateTicket = asyncHandler(async (req, res) => {
     ticket.assignedAgent = assignedAgent || null;
     if (assignedAgent) {
       ticket.assignedBy = req.user._id;
-      if (ticket.status === "Pending")
-        ticket.status = "Assigned";
+      if (ticket.status === "Pending") ticket.status = "Assigned";
     } else {
       ticket.assignedBy = null;
     }
@@ -350,7 +341,6 @@ export const deleteTicket = asyncHandler(async (req, res) => {
 
   if (ticket.status === "Closed")
     throw new ApiError(400, "Closed tickets cannot be deleted.");
-
 
   await ticket.deleteOne();
 
