@@ -118,17 +118,8 @@ export const getDepartments = asyncHandler(async (req, res) => {
 
    
 
-    page = Number(page);
-
-    limit = Number(limit);
-
-   
-
-    if (page < 1) page = 1;
-
-    if (limit < 1) limit = 10;
-
-    if (limit > 100) limit = 100;
+    page = Math.max(Number(page) || 1, 1);
+    limit = Math.min(Math.max(Number(limit) || 10, 1), 100);
 
  
     const skip = (page - 1) * limit;

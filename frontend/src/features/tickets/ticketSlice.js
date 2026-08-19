@@ -4,9 +4,9 @@ import { createTicket, deleteTicket, getAllTickets, getMyTickets, updateTicket }
 
 const initialState = {
   tickets: [],
+  pagination: null,
   loading: false,
   error: '',
-
 };
 
 export const fetchTickets = createAsyncThunk('tickets/fetch', async (params = {}, thunkAPI) => {
@@ -18,10 +18,10 @@ export const fetchTickets = createAsyncThunk('tickets/fetch', async (params = {}
   }
 });
 
-export const fetchAllTickets = createAsyncThunk('tickets/fetchAll', async (_, thunkAPI) => {
+export const fetchAllTickets = createAsyncThunk('tickets/fetchAll', async (params = {}, thunkAPI) => {
   try {
-    const response = await getAllTickets();
-    return response.data.data.tickets;
+    const response = await getAllTickets(params);
+    return response.data.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not load tickets');
   }
@@ -70,8 +70,8 @@ const ticketSlice = createSlice({
       })
       .addCase(fetchTickets.fulfilled, (state, action) => {
         state.loading = false;
-        state.tickets = action.payload.tickets;
-      
+        state.tickets = action.payload.tickets || [];
+        state.pagination = action.payload.pagination || null;
       })
       .addCase(fetchTickets.rejected, (state, action) => {
         state.loading = false;
@@ -83,7 +83,8 @@ const ticketSlice = createSlice({
       })
       .addCase(fetchAllTickets.fulfilled, (state, action) => {
         state.loading = false;
-        state.tickets = action.payload;
+        state.tickets = action.payload.tickets || [];
+        state.pagination = action.payload.pagination || null;
       })
       .addCase(fetchAllTickets.rejected, (state, action) => {
         state.loading = false;
@@ -91,6 +92,7 @@ const ticketSlice = createSlice({
       })
       .addCase(addTicket.fulfilled, (state, action) => {
         state.tickets.unshift(action.payload);
+        if (state.tickets.length > 10) state.tickets.pop();
       })
       .addCase(editTicket.fulfilled, (state, action) => {
         state.tickets = state.tickets.map((ticket) => ticket._id === action.payload._id ? action.payload : ticket);

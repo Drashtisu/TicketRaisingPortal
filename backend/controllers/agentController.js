@@ -37,7 +37,7 @@ export const getAssignedTickets = asyncHandler(async (req, res) => {
 
   let {
     page = 1,
-    limit = 10,
+    limit = 10  ,
     status,
     priority,
     search = "",

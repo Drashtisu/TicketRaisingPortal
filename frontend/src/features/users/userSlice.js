@@ -3,12 +3,12 @@ import { deleteUser, getUsers, updateUser } from '../../api/userapi';
 
 
 
-const initialState = { items: [], loading: false, error: '' };
+const initialState = { items: [], pagination: null, loading: false, error: '' };
 
 export const fetchUsers = createAsyncThunk('users/fetch', async (params = {}, thunkAPI) => {
   try {
     const response = await getUsers(params);
-    return response.data.data.users || response.data.data;
+    return response.data.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not load users');
   }
@@ -44,7 +44,8 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.items = action.payload.users || (Array.isArray(action.payload) ? action.payload : []);
+        state.pagination = action.payload.pagination || null;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;

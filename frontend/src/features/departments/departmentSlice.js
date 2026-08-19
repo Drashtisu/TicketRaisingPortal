@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createDepartment, deleteDepartment, getDepartments, updateDepartment } from '../../api/departmentapi';
 
 
-const initialState = { items: [], loading: false, error: '' };
+const initialState = { items: [], pagination: null, loading: false, error: '' };
 
 export const fetchDepartments = createAsyncThunk('departments/fetch', async (params = {}, thunkAPI) => {
   try {
     const response = await getDepartments(params);
-    return response.data.data.departments;
+    return response.data.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Could not load departments');
   }
@@ -52,7 +52,8 @@ const departmentSlice = createSlice({
       })
       .addCase(fetchDepartments.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.items = action.payload.departments || (Array.isArray(action.payload) ? action.payload : []);
+        state.pagination = action.payload.pagination || null;
       })
       .addCase(fetchDepartments.rejected, (state, action) => {
         state.loading = false;
@@ -60,6 +61,7 @@ const departmentSlice = createSlice({
       })
       .addCase(addDepartment.fulfilled, (state, action) => {
         state.items.unshift(action.payload);
+        if (state.items.length > 10) state.items.pop();
       })
       .addCase(editDepartment.fulfilled, (state, action) => {
         state.items = state.items.map((item) => item._id === action.payload._id ? action.payload : item);

@@ -199,10 +199,30 @@ export const getMyTickets = asyncHandler(async (req, res) => {
 });
 
 export const getAllTickets = asyncHandler(async (req, res) => {
-  const tickets = await populateTicket(Ticket.find({}).sort({ updatedAt: -1 }));
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "Tickets fetched successfully.", { tickets }));
+  let { page = 1, limit = 10 } = req.query;
+  page = Math.max(Number(page) || 1, 1);
+  limit = Math.min(Math.max(Number(limit) || 10, 1), 100);
+
+  const [totalTickets, tickets] = await Promise.all([
+    Ticket.countDocuments({}),
+    populateTicket(Ticket.find({})).sort({ updatedAt: -1 }).skip((page - 1) * limit).limit(limit)
+  ]);
+
+  const totalPages = Math.ceil(totalTickets / limit);
+
+  return res.status(200).json(
+    new ApiResponse(200, "Tickets fetched successfully.", {
+      tickets,
+      pagination: {
+        totalTickets,
+        totalPages,
+        currentPage: page,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    })
+  );
 });
 
 export const getTicketById = asyncHandler(async (req, res) => {

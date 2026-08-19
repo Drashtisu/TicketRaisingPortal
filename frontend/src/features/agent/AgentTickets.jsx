@@ -5,17 +5,20 @@ import {
   resolveAgentTicket,
   startTicketWork,
 } from "./../../api/agentApi";
+import Pagination from "../../components/common/Pagination";
 
 const AgentTickets = () => {
   const [tickets, setTickets] = useState([]);
+  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
   const [message, setMessage] = useState("");
   const [resolution, setResolution] = useState({});
 
-  const loadTickets = async () => {
+  const loadTickets = async (pageNum = page) => {
     try {
-      const response = await getAssignedTickets();
-      console.log(response);
-      setTickets(response.data.data.tickets);
+      const response = await getAssignedTickets({ page: pageNum, limit: 10 });
+      setTickets(response.data.data.tickets || []);
+      setPagination(response.data.data.pagination || null);
     } catch (error) {
       setMessage(
         error.response?.data?.message || "Could not load assigned tickets",
@@ -24,14 +27,14 @@ const AgentTickets = () => {
   };
 
   useEffect(() => {
-    loadTickets();
-  }, []);
+    loadTickets(page);
+  }, [page]);
 
   const runAction = async (action) => {
     try {
       await action();
       setMessage("Ticket updated successfully.");
-      loadTickets();
+      loadTickets(page);
     } catch (error) {
       setMessage(error.response?.data?.message || "Ticket update failed");
     }
@@ -101,6 +104,16 @@ const AgentTickets = () => {
           </article>
         ))}
       </div>
+      {pagination && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          totalItems={pagination.totalTickets}
+          hasNextPage={pagination.hasNextPage}
+          hasPreviousPage={pagination.hasPreviousPage}
+          onPageChange={(newPage) => setPage(newPage)}
+        />
+      )}
     </div>
   );
 };

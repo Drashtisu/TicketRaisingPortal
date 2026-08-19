@@ -4,52 +4,43 @@ import { createCategory, deleteCategory, getCategories, updateCategory } from '.
 
 
 
-const initialState ={items :[],loading:false , error :""}
+const initialState = { items: [], pagination: null, loading: false, error: "" };
 
-
-export  const fetchCategories =createAsyncThunk('/categories',async (params ={},thunkAPI)=>{
-try{
- const  response = await getCategories(params);
- return  response.data.data.categories;
-}
-catch(error){
-    return thunkAPI.rejectWithValue(error.response?.data?.message || "falied  to fetch  categories")
+export const fetchCategories = createAsyncThunk('/categories', async (params = {}, thunkAPI) => {
+  try {
+    const response = await getCategories(params);
+    return response.data.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "failed to fetch categories");
   }
 });
 
-
-export  const addCategory = createAsyncThunk('/categories/add', async(paylaod,thunkAPI)=>{
-    try{
-   const  response =await  createCategory(paylaod);
-    return  response.data.data;
-    }
-    catch(error){
-        return  thunkAPI.rejectWithValue(error.response?.data?.message || "failed  to create  category")
+export const addCategory = createAsyncThunk('/categories/add', async (paylaod, thunkAPI) => {
+  try {
+    const response = await createCategory(paylaod);
+    return response.data.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "failed to create category");
   }
 });
 
-
-export const  editCategory =createAsyncThunk ('/categories/edit',async ({id,paylaod} ,thunkAPI)=>{
-    try{
-        const  response =await updateCategory(id,paylaod)
-        return  response.data.data
-    }
-    catch(error){
-   return  thunkAPI.rejectWithValue(error.response?.data?.message || "failed  to edit  category")
+export const editCategory = createAsyncThunk('/categories/edit', async ({ id, paylaod }, thunkAPI) => {
+  try {
+    const response = await updateCategory(id, paylaod);
+    return response.data.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "failed to edit category");
   }
-})
+});
 
-export const  removeCategory =createAsyncThunk('/categories/remove' ,async ({id,paylaod} ,thunkAPI)=>{
-    try{
-
-         await  deleteCategory();
-        return id
-    }
-    catch(error){
-        return  thunkAPI.rejectWithValue(error.response?.data?.message || "failed  to remove  category")
+export const removeCategory = createAsyncThunk('/categories/remove', async ({ id, paylaod }, thunkAPI) => {
+  try {
+    await deleteCategory();
+    return id;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "failed to remove category");
   }
-})
-
+});
 
 const categorySlice = createSlice({
   name: 'categories',
@@ -63,7 +54,8 @@ const categorySlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.items = action.payload.categories || (Array.isArray(action.payload) ? action.payload : []);
+        state.pagination = action.payload.pagination || null;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
@@ -71,6 +63,7 @@ const categorySlice = createSlice({
       })
       .addCase(addCategory.fulfilled, (state, action) => {
         state.items.unshift(action.payload);
+        if (state.items.length > 10) state.items.pop();
       })
       .addCase(editCategory.fulfilled, (state, action) => {
         state.items = state.items.map((item) => item._id === action.payload._id ? action.payload : item);

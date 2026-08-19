@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDepartments } from "../departments/departmentSlice";
+import { getDepartments } from "../../api/departmentapi";
 import {
   addCategory,
   editCategory,
   fetchCategories,
   removeCategory,
 } from "./categorySlice";
+import Pagination from "../../components/common/Pagination";
 
 const CategoryList = () => {
   const dispatch = useDispatch();
-  const { items, loading } = useSelector((state) => state.categories);
-  const departments = useSelector((state) => state.departments.items);
+  const { items, pagination, loading } = useSelector((state) => state.categories);
+  const [departments, setDepartments] = useState([]);
+  const [page, setPage] = useState(1);
   const [form, setForm] = useState({
     name: "",
     code: "",
@@ -20,9 +22,11 @@ const CategoryList = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchCategories());
-    dispatch(fetchDepartments());
-  }, [dispatch]);
+    dispatch(fetchCategories({ page, limit: 10 }));
+    getDepartments({ limit: 100 }).then((res) => {
+      setDepartments(res.data.data.departments || []);
+    }).catch(() => {});
+  }, [dispatch, page]);
 
   const edit = (category) => {
     const name = window.prompt("Category name", category.name);
@@ -85,32 +89,44 @@ const CategoryList = () => {
       {loading ? (
         <p>Loading categories...</p>
       ) : (
-        <div className="card-grid">
-          {items.map((category) => (
-            <div key={category._id} className="ticket-card">
-              <h3>{category.name}</h3>
-              <p>{category.description || "No description."}</p>
-              <p>
-                <strong>Code:</strong> {category.code}
-              </p>
-              <p>
-                <strong>Department:</strong> {category.department?.name || "—"}
-              </p>
-              <div className="actions">
-                <button onClick={() => edit(category)}>Edit</button>
-                <button
-                  className="danger-button"
-                  onClick={() => {
-                    if (window.confirm(`Delete ${category.name}?`))
-                      dispatch(removeCategory(category._id));
-                  }}
-                >
-                  Delete
-                </button>
+        <>
+          <div className="card-grid">
+            {items.map((category) => (
+              <div key={category._id} className="ticket-card">
+                <h3>{category.name}</h3>
+                <p>{category.description || "No description."}</p>
+                <p>
+                  <strong>Code:</strong> {category.code}
+                </p>
+                <p>
+                  <strong>Department:</strong> {category.department?.name || "—"}
+                </p>
+                <div className="actions">
+                  <button onClick={() => edit(category)}>Edit</button>
+                  <button
+                    className="danger-button"
+                    onClick={() => {
+                      if (window.confirm(`Delete ${category.name}?`))
+                        dispatch(removeCategory(category._id));
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+          {pagination && (
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={pagination.totalPages}
+              totalItems={pagination.totalCategories}
+              hasNextPage={pagination.hasNextPage}
+              hasPreviousPage={pagination.hasPreviousPage}
+              onPageChange={(newPage) => setPage(newPage)}
+            />
+          )}
+        </>
       )}
     </div>
   );

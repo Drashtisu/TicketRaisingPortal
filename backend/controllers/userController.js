@@ -4,11 +4,28 @@ import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password").sort({ createdAt: -1 });
+  let { page = 1, limit = 10 } = req.query;
+  page = Math.max(Number(page) || 1, 1);
+  limit = Math.min(Math.max(Number(limit) || 10, 1), 100);
+
+  const [totalUsers, users] = await Promise.all([
+    User.countDocuments(),
+    User.find().select("-password").sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit)
+  ]);
+
+  const totalPages = Math.ceil(totalUsers / limit);
 
   return res.status(200).json(
     new ApiResponse(200, "Users fetched successfully", {
-      users
+      users,
+      pagination: {
+        totalUsers,
+        totalPages,
+        currentPage: page,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1
+      }
     })
   );
 });
