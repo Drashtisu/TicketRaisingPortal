@@ -52,7 +52,7 @@ const DepartmentList = () => {
                 <p><strong>Status:</strong> {dept.status}</p>
                 
                 <div className="actions"><button onClick={() => edit(dept)}>Edit</button><button className="danger-button" onClick={() => { if (window.confirm(`Delete ${dept.name}?`)) dispatch(removeDepartment(dept._id)); }}>Delete</button></div>
-               <p>sadsandjknsadjknsajkdn</p>
+               {/* <p>sadsandjknsadjknsajkdn</p> */}
               </div>
             ))}
           </div>

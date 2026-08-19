@@ -42,7 +42,7 @@ const AdminTickets = () => {
           <div className="card-grid" style={{ marginTop: '16px', marginBottom: '16px' }}>
             {visibleTickets.map((ticket) => (
               <article key={ticket._id} className="ticket-card">
-                <strong>{ticket.ticketNumber}</strong>
+                <strong>{ticket.ticketNumber}</strong>  
                 <h3>{ticket.title}</h3>
                 <p>Status: {ticket.status}</p>
                 <p>Requester: {ticket.createdBy?.name || 'Unknown'}</p>
@@ -63,6 +63,8 @@ const AdminTickets = () => {
                     ))}
                   </select>
                 </label>
+
+
 
                 <button
                   type="button"
@@ -87,7 +89,7 @@ const AdminTickets = () => {
                 >
                   {ticket.status === 'Closed' ? 'Ticket Closed' : 'Close Ticket'}
                 </button>
-              </article>
+              </article>  
             ))}
           </div>
           <Pagination

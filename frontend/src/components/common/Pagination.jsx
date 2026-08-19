@@ -9,9 +9,11 @@ const Pagination = ({
   totalItems
 }) => {
   if (totalPages < 1 && totalItems === 0) return null;
-
+console.log(totalPages,"this  count of  total pages")
   const canPrev = hasPreviousPage !== undefined ? hasPreviousPage : currentPage > 1;
+  console.log(canPrev);
   const canNext = hasNextPage !== undefined ? hasNextPage : currentPage < totalPages;
+  console.log(canNext)
 
 
   const getPageNumbers = () => {
@@ -19,7 +21,8 @@ const Pagination = ({
     const maxButtons = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
     let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-
+console.log(startPage)
+console.log(endPage)
     if (endPage - startPage + 1 < maxButtons) {
       startPage = Math.max(1, endPage - maxButtons + 1);
     }
@@ -31,7 +34,7 @@ const Pagination = ({
   };
 
   const pages = getPageNumbers();
-
+console.log(pages)
   return (
     <div className="pagination-container">
       <div className="pagination-info">
